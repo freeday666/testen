@@ -3,218 +3,174 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Freddo Community</title>
+<title>Freddo Community Live Stream</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin:0;
-    padding:0;
-    background-color:#f0f0f0;
-  }
-  header {
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color:#333;
-    color:#fff;
-    padding:10px 20px;
-  }
-  .nav-buttons {
-    display:flex;
-    gap:10px;
-  }
-  .nav-buttons button {
-    padding:8px 12px;
-    background-color:#555;
-    border:none;
-    border-radius:4px;
-    cursor:pointer;
-  }
-  .container {
-    display:flex;
-    padding:20px;
-    gap:20px;
-    flex-wrap: wrap;
-  }
-  .streaming {
-    flex:2;
-    min-width:300px;
-    background-color:#fff;
-    padding:10px;
-    border-radius:8px;
-  }
-  .video-placeholder {
-    width:100%;
-    height:400px;
-    background-color:#000;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-size:24px;
-  }
-  .sidebar {
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    min-width:200px;
-  }
-  .viewers {
-    background-color:#eee;
-    border-radius:8px;
-    padding:10px;
-    max-height:200px;
-    overflow-y:auto;
-  }
-  .viewers h3 {
-    margin-top:0;
-  }
-  .chat {
-    flex:1;
-    display:flex;
-    flex-direction:column;
-    background-color:#fff;
-    border-radius:8px;
-    overflow:hidden;
-  }
-  .chat-messages {
-    flex:1;
-    padding:10px;
-    overflow-y:auto;
-  }
-  .chat-input {
-    display:flex;
-    border-top:1px solid #ccc;
-  }
-  .chat-input input {
-    flex:1;
-    padding:10px;
-    border:none;
-  }
-  .chat-input button {
-    padding:10px;
-    background-color:#007bff;
-    border:none;
-    color:#fff;
-  }
-  .bot {
-    background-color:#d1ffd1;
-    padding:5px;
-    border-radius:4px;
-    margin-bottom:5px;
-  }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #222;
+        color: #fff;
+        margin: 0;
+        padding: 20px;
+    }
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    h1 {
+        margin: 0;
+    }
+    .stream-link {
+        text-align: center;
+        margin: 20px 0;
+    }
+    a {
+        color: #00f;
+        font-size: 1.2em;
+        text-decoration: none;
+    }
+    #loginSection {
+        display: flex;
+        align-items: center;
+    }
+    #userNameDisplay {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    #loginBtn, #logoutBtn {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        background-color: #555;
+        color: #fff;
+        cursor: pointer;
+    }
+    #loginBtn:hover, #logoutBtn:hover {
+        background-color: #777;
+    }
+    #chatContainer {
+        margin-top: 20px;
+    }
+    #chatBox {
+        background-color: #333;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+    #chatInput {
+        width: calc(100% - 80px);
+        padding: 10px;
+        border-radius: 4px;
+        border: none;
+        font-size: 1em;
+    }
+    #sendBtn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #555;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    #sendBtn:hover {
+        background-color: #777;
+    }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Freddo Community</h1>
-  <div class="nav-buttons">
-    <button id="loginBtn">Inloggen</button>
-    <button id="signupBtn">Account Maken</button>
-  </div>
+    <h1>Freddo Community Live Stream</h1>
+    <div id="loginSection">
+        <span id="userNameDisplay"></span>
+        <button id="loginBtn">Inloggen</button>
+        <button id="logoutBtn" style="display:none;">Uitloggen</button>
+    </div>
 </header>
 
-<div class="container">
-  <div class="streaming">
-    <h2>Live Stream</h2>
-    <div class="video-placeholder">Live Video Stream</div>
-    <div class="buttons" style="margin-top:10px;">
-      <button id="shareBtn">Delen</button>
-      <button id="chatBtn">Chatten</button>
+<div class="stream-link">
+    <a href="https://www.youtube.com/live/0MOkLkTP-Jk?is=ufoW6AKAbhYdl6Sj" target="_blank">
+        Bekijk de live muziek stream
+    </a>
+</div>
+
+<div id="chatContainer">
+    <h2>Chat</h2>
+    <div id="chatBox"></div>
+    <div style="display:flex; align-items:center;">
+        <input type="text" id="chatInput" placeholder="Typ je bericht..." disabled />
+        <button id="sendBtn" disabled>Verzend</button>
     </div>
-  </div>
-  <div class="sidebar">
-    <div class="viewers">
-      <h3>Kijkers</h3>
-      <ul id="viewersList">
-        <li>FreddoFan1</li>
-        <li>Streamer123</li>
-        <li>ViewerXYZ</li>
-      </ul>
-    </div>
-    <div class="chat" id="chatContainer" style="display:none;">
-      <div class="chat-messages" id="chatMessages"></div>
-      <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Typ je bericht..." />
-        <button id="sendBtn">Verstuur</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
-  // Toggle chat zichtbaar
-  document.getElementById('chatBtn').addEventListener('click', () => {
-    const chat = document.getElementById('chatContainer');
-    chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
-  });
+    let currentUser = null;
 
-  // Verstuur chatbericht
-  document.getElementById('sendBtn').addEventListener('click', () => {
-    sendMessage();
-  });
-  document.getElementById('chatInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatBox = document.getElementById('chatBox');
+
+    // Inloggen
+    loginBtn.onclick = () => {
+        const naam = prompt("Voer je gebruikersnaam in:");
+        if (naam && naam.trim() !== "") {
+            currentUser = naam.trim();
+            updateLoginState();
+        }
+    };
+
+    // Uitloggen
+    logoutBtn.onclick = () => {
+        currentUser = null;
+        updateLoginState();
+    };
+
+    function updateLoginState() {
+        if (currentUser) {
+            userNameDisplay.textContent = "Ingelogd als: " + currentUser;
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+            chatInput.disabled = false;
+            sendBtn.disabled = false;
+        } else {
+            userNameDisplay.textContent = "";
+            loginBtn.style.display = "inline-block";
+            logoutBtn.style.display = "none";
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+        }
     }
-  });
 
-  function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const messageText = input.value.trim();
-    if (messageText !== '') {
-      const messageDiv = document.createElement('div');
-      messageDiv.innerHTML = `<strong>Je:</strong> ${messageText}`;
-      document.getElementById('chatMessages').appendChild(messageDiv);
-      
-      // Check voor bot antwoorden
-      botReact(messageText);
-      
-      input.value = '';
+    // Bericht versturen
+    sendBtn.onclick = () => {
+        sendMessage();
+    };
 
-      // FreddoBot reageert ook automatisch na een korte tijd
-      // (Indien je dat wilt, kun je dat hier ook doen)
+    chatInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        const bericht = chatInput.value.trim();
+        if (bericht !== "" && currentUser) {
+            const berichtDiv = document.createElement('div');
+            berichtDiv.innerHTML = `<strong>${currentUser}:</strong> ${bericht}`;
+            chatBox.appendChild(berichtDiv);
+            chatInput.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     }
-  }
 
-  function botReact(userMessage) {
-    const reply = getBotReply(userMessage.toLowerCase());
-    if (reply) {
-      setTimeout(() => {
-        const botDiv = document.createElement('div');
-        botDiv.className = 'bot';
-        botDiv.innerHTML = `<strong>FreddoBot:</strong> ${reply}`;
-        document.getElementById('chatMessages').appendChild(botDiv);
-      }, 1000);
-    }
-  }
-
-  // Hier definieer je eenvoudige regels voor de bot
-  function getBotReply(message) {
-    if (message.includes('hallo')) {
-      return 'Hallo! Hoe gaat het met je?';
-    } else if (message.includes('hoe gaat het')) {
-      return 'Met mij gaat alles goed, bedankt dat je het vraagt!';
-    } else if (message.includes('wat is jouw naam')) {
-      return 'Ik ben FreddoBot, jouw chat helper!';
-    } else if (message.includes('bye')) {
-      return 'Tot ziens! Fijn dat je chatte!';
-    } else if (message.includes('weer')) {
-      return 'Het weer is altijd mooi hier!';
-    } else {
-      return 'Sorry, ik begrijp dat niet helemaal. Kun je dat anders formuleren?';
-    }
-  }
-
-  // Inlog en account knoppen
-  document.getElementById('loginBtn').addEventListener('click', () => {
-    alert('Inloggen functionaliteit komt nog!');
-  });
-  document.getElementById('signupBtn').addEventListener('click', () => {
-    alert('Account maken functionaliteit komt nog!');
-  });
+    // Init
+    updateLoginState();
 </script>
 
 </body>
