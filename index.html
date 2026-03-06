@@ -3,44 +3,324 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Realtime Chat met Socket.IO</title>
-<!-- Voeg socket.io client script toe -->
-<script src="/socket.io/socket.io.js"></script>
+<title>Freddo Community Live Stream</title>
+<!-- Font Awesome voor icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-  /* eenvoudige styling */
+  /* Algemene stijlen */
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* Header met inlog rechtsboven */
+  header {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  header h1 {
+    font-size: 2em;
+    margin: 0;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  /* Inlog sectie rechtsboven */
+  #loginSection {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.1);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    max-width: 90%;
+    transition: all 0.3s ease;
+  }
+
+  #loginSection h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    text-align: center;
+  }
+
+  #loginSection input {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+  }
+
+  #loginSection button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #2a5298;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  #loginSection button:hover {
+    background-color: #ddd;
+  }
+
+  /* Main content: stream + chat */
+  .content {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  /* Stream container */
+  .stream-container {
+    flex: 1 1 700px;
+    max-width: 900px;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    background: #000;
+    position: relative;
+  }
+
+  /* Chat container */
+  .chat-container {
+    flex: 1 1 300px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .chat-container h2 {
+    margin-top: 0;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  #chatBox {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    margin-bottom: 10px;
+  }
+
+  #chatBox div {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  #chatInput {
+    width: calc(100% - 80px);
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    outline: none;
+  }
+
+  #sendBtn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #2a5298;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background 0.3s ease;
+  }
+
+  #sendBtn:hover {
+    background-color: #ddd;
+  }
+
+  /* Achtergrond animatie */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, #2a5298, #1e3c72, #2a5298);
+    background-size: 400% 400%;
+    animation: gradientAnim 30s ease infinite;
+    z-index: -1;
+  }
+
+  @keyframes gradientAnim {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+
+  /* Responsiveness */
+  @media(max-width: 900px){
+    .content {
+      flex-direction: column;
+      align-items: center;
+    }
+    .stream-container {
+      width: 100%;
+      aspect-ratio: 16/9;
+    }
+    .chat-container {
+      width: 100%;
+      max-width: 90%;
+    }
+  }
 </style>
 </head>
 <body>
 
-<h1>Realtime Chat</h1>
-<div id="chatBox" style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;"></div>
-<input type="text" id="chatInput" placeholder="Typ je bericht..." />
-<button id="sendBtn">Verzend</button>
+<header>
+  <h1><i class="fas fa-music"></i> Freddo Community Live Stream</h1>
+  <!-- Inlog sectie rechtsboven -->
+  <div id="loginSection">
+    <h2>Inloggen</h2>
+    <input type="text" id="username" placeholder="Gebruikersnaam" />
+    <input type="password" id="password" placeholder="Wachtwoord" />
+    <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> Inloggen</button>
+    <button id="logoutBtn" style="display:none;"><i class="fas fa-sign-out-alt"></i> Uitloggen</button>
+    <div id="userInfo" style="margin-top:10px; text-align:center;"></div>
+  </div>
+</header>
 
+<!-- Main content -->
+<div class="content">
+  <!-- Livestream -->
+  <div class="stream-container">
+    <iframe src="https://www.youtube.com/embed/0MOkLkTP-Jk" allowfullscreen style="width:100%; height:100%;"></iframe>
+  </div>
+  <!-- Chat -->
+  <div class="chat-container">
+    <h2><i class="fas fa-comments"></i> Chat</h2>
+    <div id="chatBox"></div>
+    <div style="display:flex; align-items:center;">
+      <input type="text" id="chatInput" placeholder="Typ je bericht..." />
+      <button id="sendBtn"><i class="fas fa-paper-plane"></i> Verzend</button>
+    </div>
+  </div>
+</div>
+
+<!-- Socket.io script -->
+<script src="/socket.io/socket.io.js"></script>
 <script>
+  // Initialize socket
   const socket = io();
 
+  // DOM elementen
   const chatBox = document.getElementById('chatBox');
   const chatInput = document.getElementById('chatInput');
   const sendBtn = document.getElementById('sendBtn');
 
-  // Verstuur bericht
-  sendBtn.onclick = () => {
-    const bericht = chatInput.value.trim();
-    if (bericht !== "") {
-      socket.emit('chatbericht', { bericht: bericht });
-      chatInput.value = "";
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const userInfoDiv = document.getElementById('userInfo');
+
+  let currentUser = localStorage.getItem('username') || null;
+
+  // Functie om login state bij te werken
+  function updateLoginState() {
+    if (currentUser) {
+      document.querySelector('#loginSection h2').innerText = "Ingelogd als: " + currentUser;
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'block';
+      userInfoDiv.innerText = "";
+    } else {
+      document.querySelector('#loginSection h2').innerText = "Inloggen";
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
+      userInfoDiv.innerText = "";
+    }
+  }
+
+  // Login knop
+  loginBtn.onclick = () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    if (username && password) {
+      // Simpele login check (voor demo, geen echte auth)
+      localStorage.setItem('username', username);
+      currentUser = username;
+      updateLoginState();
+    } else {
+      alert("Voer gebruikersnaam en wachtwoord in");
     }
   };
+
+  // Uitloggen
+  logoutBtn.onclick = () => {
+    localStorage.removeItem('username');
+    currentUser = null;
+    updateLoginState();
+  };
+
+  // Verzend bericht
+  function sendMessage() {
+    const bericht = chatInput.value.trim();
+    if (bericht !== "" && currentUser) {
+      socket.emit('chatbericht', { gebruiker: currentUser, bericht: bericht });
+      chatInput.value = "";
+    } else if (!currentUser) {
+      alert("Inloggen om te chatten");
+    }
+  }
+
+  sendBtn.onclick = () => sendMessage();
+
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
 
   // Ontvang berichten
   socket.on('chatbericht', (data) => {
     const div = document.createElement('div');
-    div.innerHTML = `<strong>Gebruiker:</strong> ${data.bericht}`;
+    div.innerHTML = `<strong>${data.gebruiker}:</strong> ${data.bericht}`;
     chatBox.appendChild(div);
     chatBox.scrollTop = chatBox.scrollHeight;
   });
-</script>
 
+  // Initialiseer
+  updateLoginState();
+</script>
 </body>
 </html>
