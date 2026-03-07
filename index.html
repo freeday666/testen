@@ -1,102 +1,236 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FIVEM Hosting</title>
-<!-- Google Fonts of ander styling -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-<style>
-  body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #0d0d0d;
-    color: #fff;
-  }
-  header {
-    background-color: #1a1a1a;
-    padding: 20px;
-    text-align: center;
-  }
-  h1 {
-    margin: 0;
-  }
-  .container {
-    padding: 20px;
-  }
-  .button {
-    background-color: #ff4b2b;
-    border: none;
-    padding: 15px 30px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1.2em;
-    border-radius: 8px;
-    transition: background 0.3s;
-  }
-  .button:hover {
-    background-color: #ff1a00;
-  }
-  /* Phone sectie */
-  .phone {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #222;
-    border-radius: 10px;
-  }
-  /* Footer */
-  footer {
-    background-color: #1a1a1a;
-    text-align: center;
-    padding: 10px;
-    margin-top: 40px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freddo Hosting Pro</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0; padding: 0;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      border: none;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .close {
+      float: right;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+
+    input[type=text], input[type=password], input[type=email] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>Freddo Hosting Pro</h1>
+    <div class="buttons">
+      <button id="btnRegister">Account maken</button>
+      <button id="btnLogin">Inloggen</button>
+      <button id="btnLogout" style="display:none;">Uitloggen</button>
+    </div>
+  </header>
 
-<header>
-  <h1>FIVEM Server Hosting</h1>
-</header>
+  <main>
+    <h2>Welkom bij Freddo Hosting</h2>
+    <p>Beheer je FIVEM servers eenvoudig met ons platform!</p>
+  </main>
 
-<div class="container">
-  <h2>Welkom bij je FIVEM hosting</h2>
-  <p>Start je server, beheer en meer, alles in één moderne interface.</p>
-  
-  <button class="button" onclick="startServer()">Start Server</button>
-  <button class="button" onclick="stopServer()">Stop Server</button>
-  
-  <!-- Telefoon functie -->
-  <div class="phone" id="phoneSection">
-    <h3>Telefoon</h3>
-    <input type="text" id="phoneNumber" placeholder="Voer telefoonnummer in" />
-    <button class="button" onclick="sendSMS()">Verstuur SMS</button>
-    <div id="smsStatus"></div>
+  <!-- Register Modal -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeRegister">&times;</span>
+      <h3>Account Aanmaken</h3>
+      <form id="registerForm">
+        <input type="text" placeholder="Gebruikersnaam" id="regUsername" required />
+        <input type="email" placeholder="Email" id="regEmail" required />
+        <input type="password" placeholder="Wachtwoord" id="regPassword" required />
+        <button type="submit">Aanmelden</button>
+      </form>
+    </div>
   </div>
-</div>
 
-<footer>
-  &copy; 2024 FreddoDevX. Alle rechten voorbehouden.
-</footer>
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeLogin">&times;</span>
+      <h3>Inloggen</h3>
+      <form id="loginForm">
+        <input type="text" placeholder="Gebruikersnaam" id="loginUsername" required />
+        <input type="password" placeholder="Wachtwoord" id="loginPassword" required />
+        <button type="submit">Inloggen</button>
+      </form>
+    </div>
+  </div>
 
-<script>
-  function startServer() {
-    alert('Server wordt gestart...');
-    // Hier zou je een API call kunnen doen naar je backend
-  }
-  function stopServer() {
-    alert('Server wordt gestopt...');
-  }
-  function sendSMS() {
-    const number = document.getElementById('phoneNumber').value;
-    if (number) {
-      document.getElementById('smsStatus').innerText = 'SMS verzonden naar ' + number;
-      // Hier zou je API call naar SMS service
-    } else {
-      alert('Voer een telefoonnummer in.');
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none; padding:20px;">
+    <h2>Mijn FIVEM Panel</h2>
+    <p>Hier kun je je servers beheren.</p>
+    <button id="btnServerManagement">Server beheren</button>
+  </div>
+
+  <!-- App JS -->
+  <script>
+    const apiUrl = 'http://localhost:3000'; // Pas aan naar jouw backend URL
+
+    // Elements
+    const registerModal = document.getElementById('registerModal');
+    const loginModal = document.getElementById('loginModal');
+    const btnRegister = document.getElementById('btnRegister');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+    const closeRegister = document.getElementById('closeRegister');
+    const closeLogin = document.getElementById('closeLogin');
+    const dashboard = document.getElementById('dashboard');
+
+    let authToken = null;
+
+    // Open modals
+    btnRegister.onclick = () => { registerModal.style.display = 'flex'; }
+    btnLogin.onclick = () => { loginModal.style.display = 'flex'; }
+    btnLogout.onclick = () => {
+      authToken = null;
+      alert('Uitgelogd');
+      btnLogout.style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      dashboard.style.display = 'none';
     }
-  }
-</script>
 
+    // Close modals
+    closeRegister.onclick = () => { registerModal.style.display = 'none'; }
+    closeLogin.onclick = () => { loginModal.style.display = 'none'; }
+    window.onclick = (event) => {
+      if (event.target == registerModal) registerModal.style.display = 'none';
+      if (event.target == loginModal) loginModal.style.display = 'none';
+    }
+
+    // Register
+    document.getElementById('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      const response = await fetch(apiUrl + '/register', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Registratie succesvol! Log nu in.');
+        registerModal.style.display = 'none';
+      } else {
+        alert('Fout: ' + data.error);
+      }
+    }
+
+    // Login
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const response = await fetch(apiUrl + '/login', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        authToken = data.token;
+        alert('Inloggen gelukt!');
+        loginModal.style.display = 'none';
+
+        // Laat dashboard zien
+        document.getElementById('main').style.display = 'none';
+        dashboard.style.display = 'block';
+        btnLogout.style.display = 'inline-block';
+
+        // Optioneel: haal dashboard data op
+        fetchDashboard();
+      } else {
+        alert('Fout: ' + data.error);
+      }
+    }
+
+    async function fetchDashboard() {
+      const response = await fetch(apiUrl + '/dashboard', {
+        headers: { 'Authorization': 'Bearer ' + authToken }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+      } else {
+        alert('Authenticatie mislukt, log opnieuw in.');
+        authToken = null;
+        document.getElementById('main').style.display = 'block';
+        dashboard.style.display = 'none';
+      }
+    }
+  </script>
 </body>
 </html>
