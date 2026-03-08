@@ -1,236 +1,70 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Freddo Hosting Pro</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0; padding: 0;
-      background-color: #121212;
-      color: #fff;
-    }
-
-    header {
-      background-color: #1f1f1f;
-      padding: 20px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-    }
-
-    .buttons {
-      margin-top: 20px;
-    }
-
-    button {
-      background-color: #4CAF50;
-      border: none;
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    main {
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 999;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background-color: #222;
-      padding: 20px;
-      border-radius: 8px;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .close {
-      float: right;
-      font-size: 1.5em;
-      cursor: pointer;
-    }
-
-    input[type=text], input[type=password], input[type=email] {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Community Page</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  .button { padding: 10px 20px; margin: 10px 0; display: inline-block; background-color: #7289da; color: #fff; border: none; cursor: pointer; border-radius: 4px; text-decoration: none; font-size: 16px; }
+  #chat-container { border: 1px solid #ccc; padding: 10px; width: 100%; height: 300px; overflow-y: auto; background: #f9f9f9; margin-top: 20px; }
+  #chat-input { width: calc(100% - 60px); padding: 8px; }
+  #send-btn { padding: 8px 12px; }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Freddo Hosting Pro</h1>
-    <div class="buttons">
-      <button id="btnRegister">Account maken</button>
-      <button id="btnLogin">Inloggen</button>
-      <button id="btnLogout" style="display:none;">Uitloggen</button>
-    </div>
-  </header>
 
-  <main>
-    <h2>Welkom bij Freddo Hosting</h2>
-    <p>Beheer je FIVEM servers eenvoudig met ons platform!</p>
-  </main>
+<h1>Welcome to Our Community</h1>
 
-  <!-- Register Modal -->
-  <div id="registerModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeRegister">&times;</span>
-      <h3>Account Aanmaken</h3>
-      <form id="registerForm">
-        <input type="text" placeholder="Gebruikersnaam" id="regUsername" required />
-        <input type="email" placeholder="Email" id="regEmail" required />
-        <input type="password" placeholder="Wachtwoord" id="regPassword" required />
-        <button type="submit">Aanmelden</button>
-      </form>
-    </div>
-  </div>
+<!-- Join Discord Button -->
+<a class="button" href="https://discord.gg/DVaVupy5CK" target="_blank">Join Our Discord Server</a>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span class="close" id="closeLogin">&times;</span>
-      <h3>Inloggen</h3>
-      <form id="loginForm">
-        <input type="text" placeholder="Gebruikersnaam" id="loginUsername" required />
-        <input type="password" placeholder="Wachtwoord" id="loginPassword" required />
-        <button type="submit">Inloggen</button>
-      </form>
-    </div>
-  </div>
+<!-- Sign in with Discord Button -->
+<button id="discord-login" class="button">Sign in with Discord</button>
 
-  <!-- Dashboard -->
-  <div id="dashboard" style="display:none; padding:20px;">
-    <h2>Mijn FIVEM Panel</h2>
-    <p>Hier kun je je servers beheren.</p>
-    <button id="btnServerManagement">Server beheren</button>
-  </div>
+<!-- Display username if signed in -->
+<div id="user-info"></div>
 
-  <!-- App JS -->
-  <script>
-    const apiUrl = 'http://localhost:3000'; // Pas aan naar jouw backend URL
+<!-- Live Chat -->
+<h2>Live Chat</h2>
+<div id="chat-container"></div>
+<input type="text" id="chat-input" placeholder="Type your message..." />
+<button id="send-btn">Send</button>
 
-    // Elements
-    const registerModal = document.getElementById('registerModal');
-    const loginModal = document.getElementById('loginModal');
-    const btnRegister = document.getElementById('btnRegister');
-    const btnLogin = document.getElementById('btnLogin');
-    const btnLogout = document.getElementById('btnLogout');
-    const closeRegister = document.getElementById('closeRegister');
-    const closeLogin = document.getElementById('closeLogin');
-    const dashboard = document.getElementById('dashboard');
+<!-- Link to load chat script -->
+<script src="chat.js"></script>
 
-    let authToken = null;
+<script>
+// OAuth Sign-in URL
+const oauthUrl = "https://discord.com/oauth2/authorize?client_id=1437760476611215402&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fcallback&scope=identify%20guilds%20email";
 
-    // Open modals
-    btnRegister.onclick = () => { registerModal.style.display = 'flex'; }
-    btnLogin.onclick = () => { loginModal.style.display = 'flex'; }
-    btnLogout.onclick = () => {
-      authToken = null;
-      alert('Uitgelogd');
-      btnLogout.style.display = 'none';
-      document.getElementById('main').style.display = 'block';
-      dashboard.style.display = 'none';
-    }
+// Handle Sign in button
+document.getElementById('discord-login').onclick = () => {
+  window.location.href = oauthUrl;
+};
 
-    // Close modals
-    closeRegister.onclick = () => { registerModal.style.display = 'none'; }
-    closeLogin.onclick = () => { loginModal.style.display = 'none'; }
-    window.onclick = (event) => {
-      if (event.target == registerModal) registerModal.style.display = 'none';
-      if (event.target == loginModal) loginModal.style.display = 'none';
-    }
+// Check if user info is stored
+const userInfoDiv = document.getElementById('user-info');
+const username = localStorage.getItem('discord_username');
 
-    // Register
-    document.getElementById('registerForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('regUsername').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
+if (username) {
+  userInfoDiv.innerHTML = `Signed in as: <strong>${username}</strong>`;
+} else {
+  userInfoDiv.innerHTML = 'Not signed in.';
+}
 
-      const response = await fetch(apiUrl + '/register', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ username, email, password })
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert('Registratie succesvol! Log nu in.');
-        registerModal.style.display = 'none';
-      } else {
-        alert('Fout: ' + data.error);
-      }
-    }
+// Simulate OAuth callback (for demo purposes)
+// In real implementation, your backend should handle OAuth and set user info
+if (window.location.search.includes('code=')) {
+  // Normally, you would exchange code for token server-side
+  // Here, just simulate sign-in
+  const dummyUsername = "DiscordUser"; // Replace with actual user info from backend
+  localStorage.setItem('discord_username', dummyUsername);
+  document.getElementById('user-info').innerHTML = `Signed in as: <strong>${dummyUsername}</strong>`;
+  // Redirect back to clear URL
+  window.history.replaceState({}, document.title, "/");
+}
+</script>
 
-    // Login
-    document.getElementById('loginForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('loginUsername').value;
-      const password = document.getElementById('loginPassword').value;
-
-      const response = await fetch(apiUrl + '/login', {
-        method: 'POST',
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await response.json();
-      if (response.ok) {
-        authToken = data.token;
-        alert('Inloggen gelukt!');
-        loginModal.style.display = 'none';
-
-        // Laat dashboard zien
-        document.getElementById('main').style.display = 'none';
-        dashboard.style.display = 'block';
-        btnLogout.style.display = 'inline-block';
-
-        // Optioneel: haal dashboard data op
-        fetchDashboard();
-      } else {
-        alert('Fout: ' + data.error);
-      }
-    }
-
-    async function fetchDashboard() {
-      const response = await fetch(apiUrl + '/dashboard', {
-        headers: { 'Authorization': 'Bearer ' + authToken }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        alert(data.message);
-      } else {
-        alert('Authenticatie mislukt, log opnieuw in.');
-        authToken = null;
-        document.getElementById('main').style.display = 'block';
-        dashboard.style.display = 'none';
-      }
-    }
-  </script>
 </body>
 </html>
