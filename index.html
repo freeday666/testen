@@ -3,68 +3,269 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Community Page</title>
+<title>Gangster Discord Community</title>
+<!-- Google Fonts for a modern look -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  .button { padding: 10px 20px; margin: 10px 0; display: inline-block; background-color: #7289da; color: #fff; border: none; cursor: pointer; border-radius: 4px; text-decoration: none; font-size: 16px; }
-  #chat-container { border: 1px solid #ccc; padding: 10px; width: 100%; height: 300px; overflow-y: auto; background: #f9f9f9; margin-top: 20px; }
-  #chat-input { width: calc(100% - 60px); padding: 8px; }
-  #send-btn { padding: 8px 12px; }
+  body {
+    margin: 0;
+    font-family: 'Orbitron', Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1f1f, #3a3a3a);
+    color: #fff;
+    background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.4&auto=format&fit=crop&w=1950&q=80'); /* Wallpaper */
+    background-size: cover;
+    background-attachment: fixed;
+  }
+
+  header {
+    background-color: rgba(0,0,0,0.7);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+
+  header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5em;
+    margin: 0;
+    letter-spacing: 2px;
+    color: #ff4c4c;
+  }
+
+  /* Icons and emotes styles */
+  .icons {
+    margin-top: 10px;
+  }
+
+  .icons i {
+    font-size: 2em;
+    margin: 0 10px;
+    color: #ffd700;
+    transition: 0.3s;
+  }
+
+  .icons i:hover {
+    transform: scale(1.2);
+    color: #fff;
+  }
+
+  /* Buttons styling */
+  .buttons {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    background-color: #ff4c4c;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #ff1a1a;
+    transform: translateY(-2px);
+  }
+
+  .btn i {
+    margin-right: 8px;
+  }
+
+  /* Rules section */
+  #rules {
+    max-width: 900px;
+    margin: 30px auto;
+    background: rgba(0,0,0,0.6);
+    padding: 20px;
+    border-radius: 12px;
+    overflow-y: auto;
+  }
+
+  #rules h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 2em;
+    color: #ffd700;
+  }
+
+  #rules ol {
+    padding-left: 20px;
+  }
+
+  #rules li {
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  /* Chat section styles */
+  #chat-section {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  #chat-section h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 2em;
+    color: #ffd700;
+  }
+
+  #chat-container {
+    height: 300px;
+    overflow-y: auto;
+    background: #222;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  #chat-container div {
+    margin-bottom: 8px;
+  }
+
+  #chat-input-group {
+    display: flex;
+  }
+
+  #chat-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px 0 0 8px;
+    border: none;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  #send-btn {
+    padding: 10px 20px;
+    background-color: #ff4c4c;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  #send-btn:hover {
+    background-color: #ff1a1a;
+  }
+
+  /* Sign-in info */
+  #user-info {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #ffd700;
+  }
+
+  /* Responsive adjustments */
+  @media(max-width: 950px){
+    body {
+      padding: 10px;
+    }
+  }
 </style>
 </head>
 <body>
 
-<h1>Welcome to Our Community</h1>
+<header>
+  <h1>Gangster Vibes Community</h1>
+  <div class="icons">
+    <i class="fas fa-skull"></i>
+    <i class="fas fa-gun"></i>
+    <i class="fas fa-money-bill-wave"></i>
+    <i class="fas fa-chess-knight"></i>
+  </div>
+</header>
 
-<!-- Join Discord Button -->
-<a class="button" href="https://discord.gg/DVaVupy5CK" target="_blank">Join Our Discord Server</a>
+<!-- Buttons: Discord Join & Sign in -->
+<div class="buttons">
+  <a class="btn" href="https://discord.gg/DVaVupy5CK" target="_blank"><i class="fab fa-discord"></i> Join Discord</a>
+  <button id="discord-login" class="btn"><i class="fab fa-discord"></i> Sign in with Discord</button>
+</div>
 
-<!-- Sign in with Discord Button -->
-<button id="discord-login" class="button">Sign in with Discord</button>
+<!-- User info display -->
+<div id="user-info">Not signed in.</div>
 
-<!-- Display username if signed in -->
-<div id="user-info"></div>
+<!-- Rules Section -->
+<div id="rules">
+  <h2>Community Rules</h2>
+  <ol>
+    <li><strong>Be Respectful:</strong> Treat all members with kindness and respect. No harassment, hate speech, or discrimination will be tolerated.</li>
+    <li><strong>No Spamming:</strong> Avoid spamming messages, emojis, or links. Keep conversations relevant and on-topic.</li>
+    <li><strong>Use Appropriate Language:</strong> Maintain a friendly environment. Refrain from using offensive or NSFW language.</li>
+    <li><strong>No Toxic Behavior:</strong> Do not bullying, trolling, or provoking others. Keep discussions constructive.</li>
+    <li><strong>Follow Discord's Terms of Service:</strong> Abide by Discord's official rules and policies at all times.</li>
+    <li><strong>Respect Privacy:</strong> Do not share personal information of yourself or others without consent.</li>
+    <li><strong>No Self-Promotion or Advertising:</strong> Avoid unsolicited promotions, links, or advertisements unless permitted.</li>
+    <li><strong>Use Correct Channels:</strong> Post content in the appropriate channels. Off-topic posts may be removed.</li>
+    <li><strong>No NSFW Content:</strong> Keep all content safe for work. NSFW images, videos, or discussions are prohibited.</li>
+    <li><strong>Follow Staff Instructions:</strong> Respect and comply with moderators' and staff's guidance and decisions.</li>
+    <li><strong>No Illegal Activities:</strong> Discussions or actions involving illegal activities are strictly forbidden.</li>
+    <li><strong>Report Issues:</strong> If you encounter problems or rule-breaking, report to staff rather than confronting members.</li>
+    <li><strong>Have Fun, but Keep It Safe:</strong> Enjoy your time here while respecting community guidelines.</li>
+    <li><strong>No Impersonation:</strong> Do not impersonate other members, staff, or public figures.</li>
+    <li><strong>Language Restrictions:</strong> Use designated language channels if available.</li>
+    <li><strong>Respect Intellectual Property:</strong> Do not share copyrighted content without permission.</li>
+    <li><strong>No Hate Speech or Discrimination:</strong> This community is inclusive. Hate speech of any kind is unacceptable.</li>
+    <li><strong>Stay on Topic:</strong> Keep discussions relevant to the community’s purpose.</li>
+    <li><strong>Avoid Sensitive Topics:</strong> Be mindful of discussions around politics, religion, or divisive issues.</li>
+    <li><strong>Have a Positive Attitude:</strong> Contribute to a welcoming atmosphere and encourage others.</li>
+  </ol>
+</div>
 
-<!-- Live Chat -->
-<h2>Live Chat</h2>
-<div id="chat-container"></div>
-<input type="text" id="chat-input" placeholder="Type your message..." />
-<button id="send-btn">Send</button>
+<!-- Live Chat Section -->
+<div id="chat-section">
+  <h3>Live Chat <i class="fas fa-comments"></i></h3>
+  <div id="chat-container"></div>
+  <div id="chat-input-group">
+    <input type="text" id="chat-input" placeholder="Type your message..." />
+    <button id="send-btn"><i class="fas fa-paper-plane"></i> Send</button>
+  </div>
+</div>
 
-<!-- Link to load chat script -->
+<!-- Scripts -->
 <script src="chat.js"></script>
-
 <script>
-// OAuth Sign-in URL
-const oauthUrl = "https://discord.com/oauth2/authorize?client_id=1437760476611215402&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fcallback&scope=identify%20guilds%20email";
+  const oauthUrl = "https://discord.com/oauth2/authorize?client_id=1437760476611215402&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fcallback&scope=identify%20guilds%20email";
 
-// Handle Sign in button
-document.getElementById('discord-login').onclick = () => {
-  window.location.href = oauthUrl;
-};
+  const signInBtn = document.getElementById('discord-login');
+  const userInfoDiv = document.getElementById('user-info');
 
-// Check if user info is stored
-const userInfoDiv = document.getElementById('user-info');
-const username = localStorage.getItem('discord_username');
+  // Sign in button handler
+  signInBtn.onclick = () => {
+    window.location.href = oauthUrl;
+  };
 
-if (username) {
-  userInfoDiv.innerHTML = `Signed in as: <strong>${username}</strong>`;
-} else {
-  userInfoDiv.innerHTML = 'Not signed in.';
-}
+  // Check for OAuth callback simulation
+  const username = localStorage.getItem('discord_username');
+  if (username) {
+    userInfoDiv.innerHTML = `Signed in as: <strong>${username}</strong>`;
+  } else {
+    userInfoDiv.innerHTML = 'Not signed in.';
+  }
 
-// Simulate OAuth callback (for demo purposes)
-// In real implementation, your backend should handle OAuth and set user info
-if (window.location.search.includes('code=')) {
-  // Normally, you would exchange code for token server-side
-  // Here, just simulate sign-in
-  const dummyUsername = "DiscordUser"; // Replace with actual user info from backend
-  localStorage.setItem('discord_username', dummyUsername);
-  document.getElementById('user-info').innerHTML = `Signed in as: <strong>${dummyUsername}</strong>`;
-  // Redirect back to clear URL
-  window.history.replaceState({}, document.title, "/");
-}
+  // Simulate OAuth callback
+  if (window.location.search.includes('code=')) {
+    // Normally, server handles OAuth exchange
+    const dummyUsername = "GangsterUser"; // Replace with real data
+    localStorage.setItem('discord_username', dummyUsername);
+    userInfoDiv.innerHTML = `Signed in as: <strong>${dummyUsername}</strong>`;
+    window.history.replaceState({}, document.title, "/");
+  }
 </script>
-
 </body>
 </html>
